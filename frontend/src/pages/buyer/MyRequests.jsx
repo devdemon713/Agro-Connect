@@ -10,7 +10,9 @@ const MyRequests = () => {
     useEffect(() => {
         const fetchMyRequests = async () => {
             try {
-                const { data } = await API.get('/requests/buyer-requests');
+                // Pointing to the correct route used in your orderController
+// Change this line in fetchMyRequests
+const { data } = await API.get('/orders/my-orders'); // Or match your exact backend route
                 setRequests(data);
             } catch (err) {
                 console.error("Error fetching requests", err);
@@ -39,21 +41,22 @@ const MyRequests = () => {
                         requests.map(req => (
                             <div key={req._id} className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
                                 <div className="flex items-center gap-5">
-                                    <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400">
-                                        <img src={req.product?.image} className="w-full h-full object-cover rounded-2xl" alt="" />
+                                    <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center overflow-hidden">
+                                        <img src={req.product?.image} className="w-full h-full object-cover" alt={req.product?.name} />
                                     </div>
                                     <div>
                                         <h3 className="font-bold text-lg text-slate-800">Request for {req.product?.name}</h3>
                                         <p className="text-slate-500 text-sm flex items-center gap-1">
-                                            Farmer: <span className="font-bold text-slate-700">{req.farmer?.name}</span>
+                                            Farmer: <span className="font-bold text-slate-700">{req.farmer?.name || 'Farmer Name'}</span>
                                         </p>
                                         <p className="text-slate-400 text-xs flex items-center gap-1 mt-1">
-                                            <MapPin size={12} /> {req.farmer?.address}
+                                            <MapPin size={12} /> {req.farmer?.address || 'Address not available'}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="flex flex-col items-center md:items-end gap-2">
+                                    {/* Using lowercase to match your FarmerDashboard logic */}
                                     {req.status === 'approved' ? (
                                         <div className="flex flex-col items-center md:items-end gap-2">
                                             <span className="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-black uppercase flex items-center gap-2">
@@ -63,7 +66,7 @@ const MyRequests = () => {
                                                 href={`tel:${req.farmer?.phone}`} 
                                                 className="bg-emerald-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-emerald-700 transition shadow-lg shadow-emerald-100"
                                             >
-                                                <Phone size={18} /> Call +91 {req.farmer?.phone}
+                                                <Phone size={18} /> Call {req.farmer?.phone}
                                             </a>
                                         </div>
                                     ) : req.status === 'pending' ? (
