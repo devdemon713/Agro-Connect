@@ -29,8 +29,8 @@ exports.register = async (req, res) => {
         await user.save();
         res.status(201).json({ msg: "User registered successfully" });
 
-    } catch (err) { // 👈 Changed from 'error' to 'err'
-        console.error("REGISTRATION ERROR:", err); // 👈 Now matches the catch variable
+    } catch (err) { 
+        console.error("REGISTRATION ERROR:", err); 
         res.status(500).json({ msg: "Server Error", error: err.message });
     }
 };
@@ -63,12 +63,3 @@ exports.getMe = async (req, res) => {
     }
 };
 
-exports.getMe = async (req, res) => {
-    try {
-        // Find user by ID (provided by 'protect' middleware) and return data
-        const user = await User.findById(req.user.id).select('-password');
-        res.json(user); // Send the name, email, etc. to React
-    } catch (err) {
-        res.status(500).json({ message: "Server Error" });
-    }
-};
